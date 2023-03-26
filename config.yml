@@ -17,8 +17,7 @@ Resources:
           #!/bin/bash
           sudo yum update -y
           sudo yum install nginx -y
-          mkdir /etc/nginx/sites-enabled
-          cat << EOF > /etc/nginx/sites-enabled/nginx-config.conf
+          cat << EOF > /etc/nginx/default.d/nginx-config.conf
           server {
               listen 80 default_server;
               listen [::]:80 default_server;
