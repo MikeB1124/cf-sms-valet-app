@@ -3,7 +3,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       AvailabilityZone: us-east-1a
-      ImageId: ami-00c39f71452c08778
+      ImageId: ami-0557a15b87f6559cf
       InstanceType: t2.micro
       Tags:
         - Key: "Name"
@@ -17,11 +17,11 @@ Resources:
           #!/bin/bash
           sudo yum update -y
           sudo yum install nginx -y
-          cat << EOF > /etc/nginx/default.d/nginx-config.conf
+          cat << EOF > /etc/nginx/sites-enabled/nginx-config.conf
           server {
               listen 80 default_server;
               listen [::]:80 default_server;
-              root /home/ec2-user/build;
+              root /home/ubuntu/build;
               location / {
                       try_files $uri /index.html;
               }
