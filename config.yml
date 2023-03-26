@@ -15,8 +15,8 @@ Resources:
       UserData:
         Fn::Base64: |
           #!/bin/bash
-          sudo yum update -y
-          sudo yum install nginx -y
+          sudo apt-get update -y
+          sudo apt-get install nginx -y
           cat << EOF > /etc/nginx/sites-enabled/nginx-config.conf
           server {
               listen 80 default_server;
