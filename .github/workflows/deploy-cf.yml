@@ -1,0 +1,31 @@
+name: Deploy Cloud Formation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy Cloud Formation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        id: creds
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1a
+
+      - name: AWS CloudFormation "Deploy CloudFormation Stack" Action for GitHub Actions
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: cf-sms-valet-app
+          template: ./config.yml
+
+

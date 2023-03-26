@@ -1,0 +1,64 @@
+Resources:
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: us-east-1a
+      ImageId: ami-00c39f71452c08778
+      InstanceType: t2.micro
+      Tags:
+        - Key: "Name"
+          Value: "sms-web-server"
+      KeyName: sms-valet-app
+      SecurityGroups:
+        - !Ref SSHSecurityGroup
+        - !Ref ServerSecurityGroup
+      UserData:
+        Fn::Base64: |
+          #!/bin/bash
+          sudo yum update -y
+          sudo yum install nginx -y
+          mkdir /etc/nginx/sites-enabled
+          cat << EOF > file.txt
+          server {
+              listen 80 default_server;
+              listen [::]:80 default_server;
+              root /home/ubuntu/build;
+              location / {
+                      try_files $uri /index.html;
+              }
+          }
+          EOF
+
+  InstanceEIP:
+      Type: AWS::EC2::EIP
+      Properties:
+        InstanceId: !Ref EC2Instance
+
+  SSHSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+      - CidrIp: 0.0.0.0/0
+        FromPort: 22
+        IpProtocol: tcp
+        ToPort: 22
+
+  ServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: allow connections from specified CIDR ranges
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+
+
+
+
+
